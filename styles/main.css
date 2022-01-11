@@ -10,7 +10,7 @@ body {
 .controlsContainer {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-evenly;
     height: 5vh;
 }
 
@@ -46,7 +46,7 @@ body {
     background-color: #155BA7;
 }
 
-.keyD, .keyF, .keyJ, .keyK {
+.key {
     position: relative;
     top: 645px;
     left: 22.5px;
@@ -54,16 +54,18 @@ body {
     border-radius: 50%;
     height: 80px;
     width: 80px;
+    transition: all 0.1s;
 } 
 
-.keyD > p, .keyF > p, .keyJ > p, .keyK > p {
+p {
     color: white;
     font-size: 50px;
     position: absolute;
     margin: 12px 24px;
 }
 
-/* canvas {
-  outline: 2px black solid;
-  display: flex;
-} */
+.playing {
+    transform: scale(1.1);
+    border-color: white;
+    box-shadow: 0px 0px 15px 8px white;
+}

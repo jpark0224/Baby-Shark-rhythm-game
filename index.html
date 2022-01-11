@@ -5,47 +5,52 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./styles/main.css">
+    <link rel="shortcut icon" href="#">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@400;700&display=swap" rel="stylesheet">
     <title>Baby Shark</title>
 </head>
 <body>
-   <!-- <canvas width="500" height="800"></canvas> -->
    <div class="controlsContainer">
-        <button>Start Playing</button>
+        <button class="start">Start Playing</button>
+        <button class="stop">Stop Playing</button>
    </div>
     <div class="container">
         <div class="containerD">
             <img class="noteD" src="./images/note.png" alt="note">
             <div class="barD"></div>
-            <div class="keyD">
+            <div key="d" class="key">
                 <p>D</p>
             </div>
         </div>
         <div class="containerF">
             <img class="noteF" src="./images/note.png" alt="note">
             <div class="barF"></div>
-            <div class="keyF">
+            <div key="f" class="key">
                 <p>F</p>
             </div>
         </div>
         <div class="containerJ">
             <img class="noteJ" src="./images/note.png" alt="note">
             <div class="barJ"></div>
-            <div class="keyJ">
+            <div key="j" class="key">
                 <p>J</p>
             </div>
         </div>
         <div class="containerK">
             <img class="noteK" src="./images/note.png" alt="note">
             <div class="barK"></div>
-            <div class="keyK">
+            <div key="k" class="key">
                 <p>K</p>
             </div>
         </div>
     </div>
 
+    <audio key="d" src="./audio/D5.wav"></audio>
+    <audio key="f" src="./audio/E5.wav"></audio>
+    <audio key="j" src="./audio/FSharp5.wav"></audio>
+    <audio key="k" src="./audio/G5.wav"></audio>
 <!-- js -->
     <script src="./scripts/app.js"></script>
 </body>

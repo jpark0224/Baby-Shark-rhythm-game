@@ -1,90 +1,44 @@
 const noteD = document.querySelector(".noteD");
+const barD = document.querySelector(".barD");
+const startButton = document.querySelector(".start");
+const stopButton = document.querySelector(".stop");
+const backgroundAudio = new Audio("./audio/baby_shark.wav");
 
 let notePosition = 0;
 
-setInterval(function() {
-    notePosition += 10;
-    noteD.style.transform = `translate3d(0, ${notePosition}px, 0)`;
-}, 10)
+function startGame() {
+    backgroundAudio.play();
+    let animate = setInterval(() => {
+        notePosition += 10;
+        noteD.style.transform = `translate3d(0, ${notePosition}px, 0)`;
+        if (notePosition > 560) {
+        clearInterval(animate);
+        }
+    }, 10);
+}
 
+function stopGame() {
+    backgroundAudio.pause();
+    backgroundAudio.currentTime = 0;
+}
 
-// const canvas = document.querySelector('canvas')
-// const context = canvas.getContext('2d')
-// const keyXPosition = [100, 200, 300, 400];
+startButton.addEventListener('click', startGame);
+stopButton.addEventListener('click', stopGame);
 
+// play notes and add effects
+window.addEventListener("keydown", function(e) {
+    const audio = document.querySelector(`audio[key="${e.key}"]`);
+    const key = document.querySelector(`.key[key="${e.key}"]`);
+    audio.currentTime = 0;
+    audio.play();
+    key.classList.add("playing");
+})
 
+window.addEventListener("keyup", function(e) {
+    const key = document.querySelector(`.key[key="${e.key}"]`);
+    key.classList.remove("playing");
+})
 
-// const drawBar = () => {
-//     context.fillStyle = "#155BA7"
-//     context.fillRect(
-//             0, 600, 500, 30
-//     )
-// }
-
-// const drawKeys = (x) => {
-//     context.beginPath();
-//     context.arc(x, 715, 40, 0, 2 * Math.PI);
-//     context.fillStyle = "#F8449F"
-//     context.fill()
-//     context.closePath();
-// }
-
-// const drawNotes = (x, y) => {
-//     context.fillStyle = "#FBD830"
-//     context.fillRect(
-//         x, y, 80, 30
-//     )
-// }
-
-// let notePosition = 0
-
-// let noteSpeed = 2
-
-// const moveNotes = () => {
-//     notePosition += noteSpeed;
-// }
-
-// const removeNotes = () => {
-//     if (notePosition > 570) {
-//         console.log("passed the bar")
-//         redrawCanvas();
-//     }
-// }
-
-// const redrawCanvas = () => {
-//     // Clearing the note
-//     context.clearRect(0, 0, 500, 800)
-
-//     // drawing the current objects
-//     drawNotes(keyXPosition[0] - 40, notePosition)
-
-//     drawBar();
-//     keyXPosition.forEach(x => drawKeys(x));
-// }
-
-// drawBar();
-// keyXPosition.forEach(x => drawKeys(x));
-// // keyXPosition.forEach(x => drawNotes(x - 40));
-
-// // class Notes {
-// //     contructor(x, y, width, height) {
-// //         this.color = "#FBD830";
-// //         this.x = x;
-// //         this.y = y;
-// //         this.width = width;
-// //         this.height = height;
-// //     }
-// // } 
-
-// // const noteOne = new Notes();
-// // const noteTwo = new Notes();
-// // const noteThree = new Notes();
-// // const noteFour = new Notes();
-
-// const initialise = () => {
-//     moveNotes();
-//     redrawCanvas();
-// }
-
-// setInterval(initialise, 10)
-
+// make an array of notes in play
+// make a collision detection and remove it from the array when they come to the bottom
+// document.createlement 
