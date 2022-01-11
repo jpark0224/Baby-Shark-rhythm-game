@@ -1,0 +1,69 @@
+body {
+    height: 98vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Balsamiq Sans', cursive;
+}
+
+.controlsContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 5vh;
+}
+
+.button {
+    display: flex;
+}
+
+.container {
+    width: 500px;
+    height: 800px;
+    border: 2px #155BA7 solid;
+    display: flex;
+    background-color: #6BC9EC;
+}
+
+.containerD, .containerF, .containerJ, .containerK {
+    position: relative;
+    border: 1px rgba(255, 255, 255, 0.322) solid;
+}
+
+.noteD, .noteF, .noteJ, .noteK {
+    position: absolute;
+    left: 22.5px;
+    width: 80px;
+    height: 80px;
+}
+
+.barD, .barF, .barJ, .barK {
+    position: relative;
+    top: 600px;
+    width: 123px;
+    height: 30px;
+    background-color: #155BA7;
+}
+
+.keyD, .keyF, .keyJ, .keyK {
+    position: relative;
+    top: 645px;
+    left: 22.5px;
+    background-color: #F8449F;
+    border-radius: 50%;
+    height: 80px;
+    width: 80px;
+} 
+
+.keyD > p, .keyF > p, .keyJ > p, .keyK > p {
+    color: white;
+    font-size: 50px;
+    position: absolute;
+    margin: 12px 24px;
+}
+
+/* canvas {
+  outline: 2px black solid;
+  display: flex;
+} */
