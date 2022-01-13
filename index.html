@@ -13,33 +13,32 @@
 </head>
 <body>
    <div class="controlsContainer">
-        <button class="start">Start Playing</button>
-        <button class="stop">Stop Playing</button>
+        <button class="start">PLAY</button>
+        <button class="stop">STOP</button>
+        <div id="timer">
+            <div class="screen"></div>
+        </div>
    </div>
     <div class="container">
         <div class="containerD">
-            <img class="noteD" src="./images/note.png" alt="note">
             <div class="barD"></div>
             <div key="d" class="key">
                 <p>D</p>
             </div>
         </div>
         <div class="containerF">
-            <img class="noteF" src="./images/note.png" alt="note">
             <div class="barF"></div>
             <div key="f" class="key">
                 <p>F</p>
             </div>
         </div>
         <div class="containerJ">
-            <img class="noteJ" src="./images/note.png" alt="note">
             <div class="barJ"></div>
             <div key="j" class="key">
                 <p>J</p>
             </div>
         </div>
         <div class="containerK">
-            <img class="noteK" src="./images/note.png" alt="note">
             <div class="barK"></div>
             <div key="k" class="key">
                 <p>K</p>
@@ -51,6 +50,7 @@
     <audio key="f" src="./audio/E5.wav"></audio>
     <audio key="j" src="./audio/FSharp5.wav"></audio>
     <audio key="k" src="./audio/G5.wav"></audio>
+
 <!-- js -->
     <script src="./scripts/app.js"></script>
 </body>
