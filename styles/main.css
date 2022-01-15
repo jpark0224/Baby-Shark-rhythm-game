@@ -27,12 +27,12 @@ button {
   border-radius: 24px;
   border: none;
   cursor: pointer;
-  font-size: 26px;
+  font-size: 20px;
   height: 42px;
+  width: 150px;
   line-height: 42px;
-  padding: 2px 24px;
+  padding: 2px 10px;
   text-align: center;
-  width: auto;
 }
 
 button:hover {
@@ -47,6 +47,7 @@ button:active {
 }
 
 .container {
+  position: relative;
   width: 500px;
   height: 800px;
   border: 3px #155ba7 solid;
@@ -127,4 +128,96 @@ p {
   line-height: 42px;
   font-size: 32px;
   padding: 5px 8px;
+}
+
+.accuracyScreen {
+  color: white;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 50px;
+  cursor: default;
+  top: 500px;
+}
+
+.comboScreen {
+  color: #f8449f;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 130px;
+  cursor: default;
+  top: 150px;
+}
+
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+}
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: 200ms ease-in-out;
+  border: 1px solid black;
+  border-radius: 10px;
+  z-index: 10;
+  background-color: white;
+  width: 500px;
+  max-width: 80%;
+}
+
+.modal .active {
+  transform: translate(-50%, -50%) scale(100);
+}
+
+.modal-header {
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header .title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.modal-header .close-button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.modal-body {
+  padding: 10px 15px;
+}
+
+#overlay {
+  position: fixed;
+  opacity: 0;
+  transition: 200ms ease-in-out;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+#overlay .active {
+  opacity: 1;
+  pointer-events: all;
 }

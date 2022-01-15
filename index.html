@@ -15,11 +15,25 @@
    <div class="controlsContainer">
         <button class="start">PLAY</button>
         <button class="stop">STOP</button>
+        <button class="settings">SETTINGS</button>
+        <button data-modal-target="#instruction" id="instruction">HOW TO PLAY</button>
+                <div class="modal" id="#modal">
+                    <div class="modal-header">
+                        <div class="title">How to Play</div>
+                        <button data-close-button class="close-button">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>BABY SHARK</p>
+                    </div>
+                    </div>
+                <div id="overlay"></div>
         <div id="timer">
             <div class="screen"></div>
         </div>
    </div>
     <div class="container">
+        <div class="comboScreen"></div>
+        <div class="accuracyScreen"></div>
         <div class="containerD">
             <div class="barD"></div>
             <div key="d" class="key">
