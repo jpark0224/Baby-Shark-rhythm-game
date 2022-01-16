@@ -12,53 +12,79 @@
     <title>Baby Shark</title>
 </head>
 <body>
-   <div class="controlsContainer">
-        <button class="start">PLAY</button>
-        <button class="stop">STOP</button>
-        <button class="settings">SETTINGS</button>
-        <button data-modal-target="#instruction" id="instruction">HOW TO PLAY</button>
-                <div class="modal" id="#modal">
-                    <div class="modal-header">
-                        <div class="title">How to Play</div>
-                        <button data-close-button class="close-button">&times;</button>
+   <section class="controlsContainer">
+        <button class="controlsButton" id="start">PLAY</button>
+        <button class="controlsButton" id="stop">STOP</button>
+        <button class="modalButton" id="instructionButton"><img src="./images/information.png" alt="how to play button"></button>
+            <div class="modal" id="instructionModal">
+                <div class="modal-header">
+                    <div class="title">Play Baby Shark with a keyboard!</div>
+                    <button class="closeButton"id="instructionCloseButton">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <p>Controls:</p>
+                        <p>Press PLAY to start or restart the game. </p>
+                        <p>Press STOP to stop playing.</p>
+                        <p>Press the gear icon to adjust the settings.</p>
                     </div>
-                    <div class="modal-body">
-                        <p>BABY SHARK</p>
-                    </div>
-                    </div>
+                    <div>
+                        <p>Gameplay:</p>
+                        <p>When you press PLAY, baby sharkes will fall down.</p>
+                        <p>Try to catch them when they reach the pink circles by pressing the corresponding buttons while listening to the background music carefully.</p>
+                        <p>The more accurate you play the notes and the longer combos you achieve, the more you will score!</p>
+                    </div>                        
+                    <div>E: juliepark242@gmail.com</div>
+                </div>
+            </div>
                 <div id="overlay"></div>
-        <div id="timer">
-            <div class="screen"></div>
+        <button class="modalButton" id="settingsButton"><img src="./images/settings.png" alt="settings play"></button>
+        <div class="modal" id="settingsModal">
+            <div class="modal-header">
+                <div class="title">SETTINGS</div>
+                <button class="closeButton"id="settingsCloseButton">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>SETTINGS</p>
+            </div>
         </div>
+        <div id="overlay"></div>
    </div>
+   </section>
+   <section class="main">
     <div class="container">
         <div class="comboScreen"></div>
         <div class="accuracyScreen"></div>
         <div class="containerD">
-            <div class="barD"></div>
             <div key="d" class="key">
                 <p>D</p>
             </div>
         </div>
         <div class="containerF">
-            <div class="barF"></div>
             <div key="f" class="key">
                 <p>F</p>
             </div>
         </div>
         <div class="containerJ">
-            <div class="barJ"></div>
             <div key="j" class="key">
                 <p>J</p>
             </div>
         </div>
         <div class="containerK">
-            <div class="barK"></div>
             <div key="k" class="key">
                 <p>K</p>
             </div>
         </div>
     </div>
+    <section class="gameInfo">
+    <div id="timer">
+        <p>Time: <span class="screen"></div></p>
+    </div>
+    <div id="score">
+        <p>Score: <span class="screen"></span></p>
+    </div>
+    </section>
+    </section>
 
     <audio key="d" src="./audio/D5.wav"></audio>
     <audio key="f" src="./audio/E5.wav"></audio>

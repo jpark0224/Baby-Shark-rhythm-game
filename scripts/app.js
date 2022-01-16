@@ -1,13 +1,15 @@
 // variables
-const startButton = document.querySelector(".start");
-const stopButton = document.querySelector(".stop");
+const startButton = document.querySelector("#start");
+const stopButton = document.querySelector("#stop");
 const backgroundAudio = new Audio("./audio/baby_shark.wav");
+const container = document.querySelector(".container");
 const containerD = document.querySelector(".containerD");
 const containerF = document.querySelector(".containerF");
 const containerJ = document.querySelector(".containerJ");
 const containerK = document.querySelector(".containerK");
 const allNoteTimeouts = [];
-let collisionHeight = 562.5;
+const barTimeouts = [];
+let collisionHeight = 600;
 let noteFallSpeed = 1;
 let comboCount = 0;
 const accuracyScreen = document.querySelector(".accuracyScreen");
@@ -17,6 +19,7 @@ const comboScreen = document.querySelector(".comboScreen");
 const timerBody = document.querySelector("#timer");
 const timerScreen = timerBody.querySelector(".screen");
 let timerId = null;
+let elapsedTime = 0;
 
 // note timings
 const noteDTimings = [9250, 9750, 11000, 12750, 13500, 13750, 15000, 15750];
@@ -134,12 +137,58 @@ function populateNotes() {
 
 populateNotes();
 
+// bar indicator timings
+const barTimings = [];
+
+for (let k = 0; k < 92; k++) {
+  barTimings.push(750 + 1000 * k);
+}
+
+// make bar indicators and animations
+function startbarIndicatorFalls() {
+  for (let i = 0; i < barTimings.length; i++) {
+    const barTimeout = setTimeout(() => {
+      makeBar();
+    }, barTimings[i] - collisionHeight / noteFallSpeed);
+    barTimeouts.push(barTimeout);
+  }
+}
+
+function makeBar() {
+  const bar = document.createElement("div");
+  bar.classList.add("barIndicator");
+  container.append(bar);
+
+  let start;
+  let barPosition = 0;
+
+  function nextStep(timestamp) {
+    if (barPosition >= 800) {
+      container.removeChild(bar);
+      return;
+    }
+
+    if (start === undefined) {
+      start = timestamp;
+    }
+    const elapsed = timestamp - start;
+
+    barPosition = Math.min(elapsed * noteFallSpeed, 800);
+    bar.style.transform = `translateY(${barPosition}px)`;
+
+    window.requestAnimationFrame(nextStep);
+  }
+
+  // Starting the note animation
+  window.requestAnimationFrame(nextStep);
+}
+
 // make note elements and animations
 function startNoteFalls() {
   for (let i = 0; i < allNotes.length; i++) {
     const noteTimeout = setTimeout(() => {
       makeNote(allNotes[i]);
-    }, allNotes[i].timingInMs - collisionHeight / noteFallSpeed);
+    }, allNotes[i].timingInMs - (collisionHeight - 40) / noteFallSpeed);
     allNoteTimeouts.push(noteTimeout);
   }
 }
@@ -151,10 +200,7 @@ function makeNote(note) {
   note.container.append(note.element);
 
   let start;
-  const maxHeight = collisionHeight * 1.5;
-
-  // the note should be removed after max height not matter what. If it was already removed, there is no need to do it again.
-  // the note should be removed when it has been hit.
+  const maxHeight = collisionHeight * 1.2;
 
   function nextStep(timestamp) {
     if (note.hasBeenHit) {
@@ -163,6 +209,8 @@ function makeNote(note) {
       note.position = null;
       return;
     }
+
+    // if note passed max height and there was no hit, judge as miss
     if (note.position >= maxHeight) {
       miss("MISS");
       note.container.removeChild(note.element);
@@ -187,7 +235,7 @@ function makeNote(note) {
 
 // play keys and add effects
 window.addEventListener("keydown", (e) => {
-  const keyDownTiming = parseFloat(timerScreen.innerHTML) * 1000;
+  const keyDownTiming = elapsedTime;
 
   // set up keys
   const setupKeys = () => {
@@ -233,15 +281,23 @@ window.addEventListener("keydown", (e) => {
 
 function hit(judgment, i) {
   accuracyScreen.innerHTML = judgment;
-  console.log(judgment);
   comboCount++;
   comboScreen.innerHTML = comboCount;
   allNotes[i].hasBeenHit = true;
+
+  //scoring
+  if ((judgment = "PERFECT")) {
+    score += 15;
+  } else if ((judgment = "GOOD")) {
+    score += 10;
+  } else if ((judgment = "BAD")) {
+    score += 5;
+  }
+  scoreScreen.innerHTML = score;
 }
 
 function miss(judgment) {
   accuracyScreen.innerHTML = judgment;
-  console.log(judgment);
   comboCount = 0;
   comboScreen.innerHTML = comboCount;
 }
@@ -253,16 +309,54 @@ window.addEventListener("keyup", (e) => {
   }
 });
 
-// instruction
-const openModalButtons = document.querySelectorAll("[data-modal-target]");
-const closeModalButtons = document.querySelectorAll("[data-close-button]");
-const overlay = document.querySelector("#overlay");
-const modal = document.querySelector("#instruction");
+// track scores
+let score = 0;
+const scoreBody = document.querySelector("#score");
+const scoreScreen = scoreBody.querySelector(".screen");
+scoreScreen.innerHTML = 0;
 
-openModalButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    openModal(modal);
-  });
+// add bonus score for combos
+const comboBonus = comboCount / 50;
+if (comboBonus >= 1) {
+  score += 30;
+  scoreScreen.innerHTML = score;
+} else if (comboBonus >= 2) {
+  score += 50;
+  scoreScreen.innerHTML = score;
+} else if (comboBonus >= 3) {
+  score += 70;
+  scoreScreen.innerHTML = score;
+} else if (comboBonus >= 4) {
+  score += 90;
+  scoreScreen.innerHTML = score;
+}
+
+// instruction and settings pop up
+const instructionButton = document.querySelector("#instructionButton");
+const settingsButton = document.querySelector("#settingsButton");
+const instructionCloseButton = document.querySelector(
+  "#instructionCloseButton"
+);
+const settingsCloseButton = document.querySelector("#settingsCloseButton");
+const instructionModal = document.querySelector("#instructionModal");
+const settingsModal = document.querySelector("#settingsModal");
+const overlay = document.querySelector("#overlay");
+
+instructionButton.addEventListener("click", () => {
+  openModal(instructionModal);
+});
+
+settingsButton.addEventListener("click", () => {
+  const settingsModal = document.querySelector("#settingsModal");
+  openModal(settingsModal);
+});
+
+instructionCloseButton.addEventListener("click", () => {
+  closeModal(instructionModal);
+});
+
+settingsCloseButton.addEventListener("click", () => {
+  closeModal(settingsModal);
 });
 
 overlay.addEventListener("click", () => {
@@ -272,15 +366,8 @@ overlay.addEventListener("click", () => {
   });
 });
 
-closeModalButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const modal = button.closest(".modal");
-    closeModal(modal);
-  });
-});
-
 function openModal(modal) {
-  if (modal == null) {
+  if (modal === null) {
     return;
   }
   modal.classList.add("active");
@@ -288,7 +375,7 @@ function openModal(modal) {
 }
 
 function closeModal(modal) {
-  if (modal == nul) {
+  if (modal === null) {
     return;
   }
   modal.classList.remove("active");
@@ -297,7 +384,7 @@ function closeModal(modal) {
 
 // timer
 let startTime = 0;
-timerScreen.innerHTML = `${0 + "s"}`;
+timerScreen.innerHTML = `${elapsedTime + "s"}`;
 
 function handleStartTimer() {
   if (timerId) {
@@ -308,8 +395,8 @@ function handleStartTimer() {
       if (!startTime) {
         startTime = Date.now();
       }
-      let elapsedTime = Date.now() - startTime;
-      timerScreen.innerHTML = `${(elapsedTime / 1000).toFixed(3) + "s"}`;
+      elapsedTime = Date.now() - startTime;
+      timerScreen.innerHTML = `${(elapsedTime / 1000).toFixed() + "s"}`;
     }, 10);
   }
 }
@@ -319,7 +406,28 @@ function handleResetTimer() {
   timerId = null;
   startTime = null;
   elapsedTime = 0;
-  timerScreen.innerHTML = `${0 + "s"}`;
+}
+
+function resetGame() {
+  backgroundAudio.pause();
+  backgroundAudio.currentTime = 0;
+  allNoteTimeouts.forEach((note) => clearTimeout(note));
+  barTimeouts.forEach((note) => clearTimeout(note));
+  allNotes.forEach((note) => {
+    if (!note.element === null) {
+      note.container.removeChild(note.element);
+    }
+  });
+  handleResetTimer();
+  accuracyScreen.innerHTML = null;
+  comboCount = 0;
+  score = 0;
+  elapsedTime = 0;
+  timerScreen.innerHTML = `${elapsedTime + "s"}`;
+  scoreScreen.innerHTML = score;
+  allNotes.forEach((note) => (note.hasBeenHit = false));
+  comboScreen.innerHTML = null;
+  scoreScreen.innerHTML = score;
 }
 
 // start and stop game
@@ -328,28 +436,17 @@ function startGame() {
     clearInterval(timerId);
     timerId = null;
     startTime = null;
-    allNoteTimeouts.forEach((note) => clearTimeout(note));
     handleResetTimer();
-    accuracyScreen.innerHTML = null;
-    comboScreen.innerHTML = null;
+    resetGame();
   }
-  elapsedTime = 0;
-  timerScreen.innerHTML = `${0 + "s"}`;
-  backgroundAudio.currentTime = 0;
   backgroundAudio.play();
   startNoteFalls();
+  startbarIndicatorFalls();
   handleStartTimer();
 }
 
 function stopGame() {
-  backgroundAudio.pause();
-  backgroundAudio.currentTime = 0;
-  allNoteTimeouts.forEach((note) => clearTimeout(note));
-  handleResetTimer();
-  comboCount = 0;
-  accuracyScreen.innerHTML = null;
-  comboScreen.innerHTML = null;
-  allNotes.forEach((note) => (note.hasBeenHit = false));
+  resetGame();
 }
 
 startButton.addEventListener("click", startGame);
