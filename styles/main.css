@@ -169,6 +169,7 @@ body {
   font-size: 50px;
   cursor: default;
   top: 400px;
+  z-index: 1;
 }
 
 .comboScreen {
@@ -182,6 +183,7 @@ body {
   font-size: 130px;
   cursor: default;
   top: 150px;
+  z-index: 1;
 }
 
 .modal {

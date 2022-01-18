@@ -21,19 +21,24 @@ const timerScreen = timerBody.querySelector(".screen");
 let timerId = null;
 let elapsedTime = 0;
 
+// reset time when the song ends
+if (elapsedTime > 92000) {
+  elapsedTime === 0;
+}
+
 // note timings
 const noteDTimings = [
-  9250, 9750, 11000, 12750, 13500, 13750, 15000, 15750, 89375, 89750, 90075,
+  9250, 9750, 11000, 12750, 13500, 13750, 15000, 15750, 89450, 89700, 90075,
 ];
 const noteFTimings = [
-  8000, 9000, 9500, 10000, 10750, 13000, 13250, 14000, 14750, 15750, 89500,
+  8000, 9000, 9500, 10000, 10750, 13000, 13250, 14000, 14750, 15750, 89575,
   89825,
 ];
 const noteJTimings = [
   7750, 8250, 8750, 10250, 11250, 12000, 12250, 14500, 15250, 15750,
 ];
 const noteKTimings = [
-  8500, 10500, 11500, 11750, 12500, 14250, 15500, 15750, 89000, 90075,
+  8500, 10500, 11500, 11750, 12500, 14250, 15500, 15750, 89075, 90075,
 ];
 
 // 120bpm, 2/4, 8th note = beat
@@ -182,7 +187,7 @@ function makeBarTimings() {
     barTimings.push(65735 + 909 * j);
   }
   for (let k = 0; k < 17; k++) {
-    barTimings.push(75075 + 1000 * k);
+    barTimings.push(74075 + 1000 * k);
   }
 }
 
