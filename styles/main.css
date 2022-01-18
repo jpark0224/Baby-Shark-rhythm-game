@@ -120,7 +120,7 @@ body {
 
 .key {
   position: relative;
-  top: 645px;
+  top: 600px;
   left: 22.5px;
   background-color: #f8449f;
   border-radius: 50%;
@@ -254,4 +254,5 @@ body {
   height: 2px;
   background: white;
   width: 500px;
+  z-index: -1;
 }

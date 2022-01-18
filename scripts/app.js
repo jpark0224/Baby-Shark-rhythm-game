@@ -22,60 +22,94 @@ let timerId = null;
 let elapsedTime = 0;
 
 // note timings
-const noteDTimings = [9250, 9750, 11000, 12750, 13500, 13750, 15000, 15750];
+const noteDTimings = [
+  9250, 9750, 11000, 12750, 13500, 13750, 15000, 15750, 89375, 89750, 90075,
+];
 const noteFTimings = [
-  8000, 9000, 9500, 10000, 10750, 13000, 13250, 14000, 14750, 15750,
+  8000, 9000, 9500, 10000, 10750, 13000, 13250, 14000, 14750, 15750, 89500,
+  89825,
 ];
 const noteJTimings = [
   7750, 8250, 8750, 10250, 11250, 12000, 12250, 14500, 15250, 15750,
 ];
-const noteKTimings = [8500, 10500, 11500, 11750, 12500, 14250, 15500, 15750];
+const noteKTimings = [
+  8500, 10500, 11500, 11750, 12500, 14250, 15500, 15750, 89000, 90075,
+];
 
-const d1 = 16750;
-const d2 = d1 + 2500;
-const d3 = d2 + 2000;
+// 120bpm, 2/4, 8th note = beat
 
-const f1 = d1 + 500;
-const f2 = f1 + 2250;
-const f3 = f2 + 2000;
+function makeNoteTimings(k1, beat, numberOfRepeats, repeatIn) {
+  let k2 = k1 + beat;
+  let k3 = k2 + beat;
+  let k4 = k3 + beat;
+  let k5 = k4 + beat / 2;
+  let k6 = k5 + beat;
+  let k7 = k6 + beat / 2;
 
-const j = d1 + 7000;
+  let k8 = k1 + beat * 22;
+  let k9 = k8 + beat;
 
-const k1 = d1 + 1000;
-const k2 = k1 + 250;
-const k3 = k2 + 250;
-const k4 = k3 + 250;
-const k5 = k4 + 125;
-const k6 = k5 + 250;
-const k7 = k6 + 125;
+  let d1 = k1 - beat * 4;
+  let d2 = k1 + beat * 6;
+  let d3 = d2 + beat * 8;
 
-const k8 = d1 + 6500;
-const k9 = k8 + 250;
+  let f1 = k1 - beat * 2;
+  let f2 = f1 + beat * 9;
+  let f3 = f2 + beat * 8;
 
-for (let i = 0; i < 6; i++) {
-  // d
-  noteDTimings.push(d1 + 8000 * i);
-  noteDTimings.push(d2 + 8000 * i);
-  noteDTimings.push(d3 + 8000 * i);
-  // f
-  noteFTimings.push(f1 + 8000 * i);
-  noteFTimings.push(f2 + 8000 * i);
-  noteFTimings.push(f3 + 8000 * i);
-  // j
-  noteJTimings.push(j + 8000 * i);
-  // k
-  for (let j = 0; j < 3; j++) {
-    noteKTimings.push(k1 + 2000 * j + 8000 * i);
-    noteKTimings.push(k2 + 2000 * j + 8000 * i);
-    noteKTimings.push(k3 + 2000 * j + 8000 * i);
-    noteKTimings.push(k4 + 2000 * j + 8000 * i);
-    noteKTimings.push(k5 + 2000 * j + 8000 * i);
-    noteKTimings.push(k6 + 2000 * j + 8000 * i);
-    noteKTimings.push(k7 + 2000 * j + 8000 * i);
+  let j = k1 + beat * 24;
+
+  let modulatedD1 = 64770;
+  let modulatedF1 = 65250;
+
+  // repeat
+  for (let i = 0; i < numberOfRepeats; i++) {
+    // d
+    if (k1 < 65000 || 75000 < k1) {
+      noteDTimings.push(d1 + repeatIn * beat * i);
+    } else {
+      noteDTimings.push(modulatedD1);
+    }
+    noteDTimings.push(d2 + repeatIn * beat * i);
+    noteDTimings.push(d3 + repeatIn * beat * i);
+    // f
+    if (k1 < 65000 || 75000 < k1) {
+      noteFTimings.push(f1 + repeatIn * beat * i);
+    } else {
+      noteFTimings.push(modulatedF1);
+    }
+    noteFTimings.push(f2 + repeatIn * beat * i);
+    noteFTimings.push(f3 + repeatIn * beat * i);
+    // j
+    if (k1 < 75000 || i === 0) {
+      noteJTimings.push(j + repeatIn * beat * i);
+    }
+    // k
+    for (let j = 0; j < 3; j++) {
+      noteKTimings.push(k1 + beat * 8 * j + repeatIn * beat * i);
+      noteKTimings.push(k2 + beat * 8 * j + repeatIn * beat * i);
+      noteKTimings.push(k3 + beat * 8 * j + repeatIn * beat * i);
+      noteKTimings.push(k4 + beat * 8 * j + repeatIn * beat * i);
+      if (k1 > 75000 && i === 1 && j === 2) {
+        noteJTimings.push(k5 + beat * 8 * j + repeatIn * beat * i);
+        noteJTimings.push(k6 + beat * 8 * j + repeatIn * beat * i);
+        noteJTimings.push(k7 + beat * 8 * j + repeatIn * beat * i);
+      } else {
+        noteKTimings.push(k5 + beat * 8 * j + repeatIn * beat * i);
+        noteKTimings.push(k6 + beat * 8 * j + repeatIn * beat * i);
+        noteKTimings.push(k7 + beat * 8 * j + repeatIn * beat * i);
+      }
+    }
+    if (k1 < 75000 || i === 0) {
+      noteKTimings.push(k8 + repeatIn * beat * i);
+      noteKTimings.push(k9 + repeatIn * beat * i);
+    }
   }
-  noteKTimings.push(k8 + 8000 * i);
-  noteKTimings.push(k9 + 8000 * i);
 }
+
+makeNoteTimings(17750, 250, 6, 32);
+makeNoteTimings(65735, 227.25, 1, 32);
+makeNoteTimings(75075, 250, 2, 32);
 
 // populate an array of note objects
 const allNotes = [];
@@ -140,31 +174,63 @@ populateNotes();
 // bar indicator timings
 const barTimings = [];
 
-for (let k = 0; k < 92; k++) {
-  barTimings.push(750 + 1000 * k);
+function makeBarTimings() {
+  for (let i = 0; i < 65; i++) {
+    barTimings.push(750 + 1000 * i);
+  }
+  for (let j = 0; j < 9; j++) {
+    barTimings.push(65735 + 909 * j);
+  }
+  for (let k = 0; k < 17; k++) {
+    barTimings.push(75075 + 1000 * k);
+  }
 }
+
+makeBarTimings();
+
+// make bar objects
+const bars = [];
+
+function populateBars() {
+  for (let i = 0; i < barTimings.length; i++) {
+    const bar = {
+      timingInMs: barTimings[i],
+      position: null,
+      element: null,
+    };
+    bars.push(bar);
+  }
+}
+
+populateBars();
 
 // make bar indicators and animations
 function startbarIndicatorFalls() {
-  for (let i = 0; i < barTimings.length; i++) {
+  for (let i = 0; i < bars.length; i++) {
+    if (bars[i].timingInMs > 65000 && bars[i].timingInMs < 74000) {
+      noteFallSpeed = 1.1;
+    } else {
+      noteFallSpeed = 1;
+    }
     const barTimeout = setTimeout(() => {
-      makeBar();
-    }, barTimings[i] - collisionHeight / noteFallSpeed);
+      makeBar(bars[i]);
+    }, bars[i].timingInMs - collisionHeight / noteFallSpeed);
     barTimeouts.push(barTimeout);
   }
 }
 
-function makeBar() {
-  const bar = document.createElement("div");
-  bar.classList.add("barIndicator");
-  container.append(bar);
+function makeBar(bar) {
+  bar.element = document.createElement("div");
+  bar.element.classList.add("barIndicator");
+  container.append(bar.element);
 
   let start;
-  let barPosition = 0;
+  bar.position = 0;
 
   function nextStep(timestamp) {
-    if (barPosition >= 800) {
-      container.removeChild(bar);
+    if (bar.position >= 800) {
+      container.removeChild(bar.element);
+      bar.position = null;
       return;
     }
 
@@ -172,20 +238,29 @@ function makeBar() {
       start = timestamp;
     }
     const elapsed = timestamp - start;
+    if (elapsedTime > 65000 && elapsedTime < 74000) {
+      noteFallSpeed = 1.1;
+    } else {
+      noteFallSpeed = 1;
+    }
+    bar.position = Math.min(elapsed * noteFallSpeed, 800);
+    bar.element.style.transform = `translateY(${bar.position}px)`;
 
-    barPosition = Math.min(elapsed * noteFallSpeed, 800);
-    bar.style.transform = `translateY(${barPosition}px)`;
-
-    window.requestAnimationFrame(nextStep);
+    barStopID = window.requestAnimationFrame(nextStep);
   }
 
-  // Starting the note animation
+  // Starting the bar animation
   window.requestAnimationFrame(nextStep);
 }
 
 // make note elements and animations
 function startNoteFalls() {
   for (let i = 0; i < allNotes.length; i++) {
+    if (allNotes[i].timingInMs > 65000 && allNotes[i].timingInMs < 74000) {
+      noteFallSpeed = 1.1;
+    } else {
+      noteFallSpeed = 1;
+    }
     const noteTimeout = setTimeout(() => {
       makeNote(allNotes[i]);
     }, allNotes[i].timingInMs - (collisionHeight - 40) / noteFallSpeed);
@@ -200,7 +275,7 @@ function makeNote(note) {
   note.container.append(note.element);
 
   let start;
-  const maxHeight = collisionHeight * 1.2;
+  const maxHeight = 720;
 
   function nextStep(timestamp) {
     if (note.hasBeenHit) {
@@ -222,11 +297,15 @@ function makeNote(note) {
       start = timestamp;
     }
     const elapsed = timestamp - start;
-
+    if (elapsedTime > 65000 && elapsedTime < 74000) {
+      noteFallSpeed = 1.1;
+    } else {
+      noteFallSpeed = 1;
+    }
     note.position = Math.min(elapsed * noteFallSpeed, maxHeight);
     note.element.style.transform = `translateY(${note.position}px)`;
 
-    window.requestAnimationFrame(nextStep);
+    noteStopID = window.requestAnimationFrame(nextStep);
   }
 
   // Starting the note animation
@@ -242,11 +321,22 @@ window.addEventListener("keydown", (e) => {
     if (e.key === "d" || e.key === "f" || e.key === "j" || e.key === "k") {
       // set up key audio
       const audio = document.querySelector(`audio[key="${e.key}"]`);
+      if (keyDownTiming > 64700) {
+        if (e.key === "d") {
+          audio.src = "./audio/DSharp5.wav";
+        } else if (e.key === "f") {
+          audio.src = "./audio/F5.wav";
+        } else if (e.key === "j") {
+          audio.src = "./audio/G5.wav";
+        } else if (e.key === "k") {
+          audio.src = "./audio/GSharp5.wav";
+        }
+      }
       audio.currentTime = 0;
       audio.play();
 
       // mute keys in intro
-      if (keyDownTiming < d1 - 500) {
+      if (keyDownTiming < 16250) {
         audio.muted = true;
       } else {
         audio.muted = false;
@@ -255,6 +345,9 @@ window.addEventListener("keydown", (e) => {
       // set up keydown effect
       const key = document.querySelector(`.key[key="${e.key}"]`);
       key.classList.add("playing");
+
+      // developer feature: show elapsed time in ms
+      console.log(elapsedTime);
     }
   };
   setupKeys();
@@ -413,11 +506,6 @@ function resetGame() {
   backgroundAudio.currentTime = 0;
   allNoteTimeouts.forEach((note) => clearTimeout(note));
   barTimeouts.forEach((note) => clearTimeout(note));
-  allNotes.forEach((note) => {
-    if (!note.element === null) {
-      note.container.removeChild(note.element);
-    }
-  });
   handleResetTimer();
   accuracyScreen.innerHTML = null;
   comboCount = 0;
