@@ -14,6 +14,16 @@ let noteFallSpeed = 1;
 let comboCount = 0;
 const accuracyScreen = document.querySelector(".accuracyScreen");
 const comboScreen = document.querySelector(".comboScreen");
+let perfectNotes = 0;
+let perfectPercentages = 0;
+let goodNotes = 0;
+let goodPercentages = 0;
+let badNotes = 0;
+let badPercentages = 0;
+let missedNotes = 0;
+let missedPercentages = 0;
+
+let totalHitScore = 0;
 
 // timer variables
 const timerBody = document.querySelector("#timer");
@@ -21,17 +31,12 @@ const timerScreen = timerBody.querySelector(".screen");
 let timerId = null;
 let elapsedTime = 0;
 
-// reset time when the song ends
-if (elapsedTime > 92000) {
-  elapsedTime === 0;
-}
-
 // note timings
 const noteDTimings = [
-  9250, 9750, 11000, 12750, 13500, 13750, 15000, 15750, 89450, 89700, 90075,
+  9250, 9750, 11000, 12750, 13500, 13750, 15000, 15750, 89200, 89575, 90075,
 ];
 const noteFTimings = [
-  8000, 9000, 9500, 10000, 10750, 13000, 13250, 14000, 14750, 15750, 89575,
+  8000, 9000, 9500, 10000, 10750, 13000, 13250, 14000, 14750, 15750, 89450,
   89825,
 ];
 const noteJTimings = [
@@ -132,6 +137,8 @@ function populateNotes() {
       hasBeenHit: false,
       position: null,
       element: null,
+      judgment: null,
+      score: null,
     };
     allNotes.push(dNote);
     dNotes.push(dNote);
@@ -144,6 +151,8 @@ function populateNotes() {
       hasBeenHit: false,
       position: null,
       element: null,
+      judgment: null,
+      score: null,
     };
     allNotes.push(fNote);
     fNotes.push(fNote);
@@ -156,6 +165,8 @@ function populateNotes() {
       hasBeenHit: false,
       position: null,
       element: null,
+      judgment: null,
+      score: null,
     };
     allNotes.push(jNote);
     jNotes.push(jNote);
@@ -168,6 +179,8 @@ function populateNotes() {
       hasBeenHit: false,
       position: null,
       element: null,
+      judgment: null,
+      score: null,
     };
     allNotes.push(kNote);
     kNotes.push(kNote);
@@ -212,11 +225,6 @@ populateBars();
 // make bar indicators and animations
 function startbarIndicatorFalls() {
   for (let i = 0; i < bars.length; i++) {
-    if (bars[i].timingInMs > 65000 && bars[i].timingInMs < 74000) {
-      noteFallSpeed = 1.1;
-    } else {
-      noteFallSpeed = 1;
-    }
     const barTimeout = setTimeout(() => {
       makeBar(bars[i]);
     }, bars[i].timingInMs - collisionHeight / noteFallSpeed);
@@ -243,11 +251,7 @@ function makeBar(bar) {
       start = timestamp;
     }
     const elapsed = timestamp - start;
-    if (elapsedTime > 65000 && elapsedTime < 74000) {
-      noteFallSpeed = 1.1;
-    } else {
-      noteFallSpeed = 1;
-    }
+
     bar.position = Math.min(elapsed * noteFallSpeed, 800);
     bar.element.style.transform = `translateY(${bar.position}px)`;
 
@@ -261,11 +265,6 @@ function makeBar(bar) {
 // make note elements and animations
 function startNoteFalls() {
   for (let i = 0; i < allNotes.length; i++) {
-    if (allNotes[i].timingInMs > 65000 && allNotes[i].timingInMs < 74000) {
-      noteFallSpeed = 1.1;
-    } else {
-      noteFallSpeed = 1;
-    }
     const noteTimeout = setTimeout(() => {
       makeNote(allNotes[i]);
     }, allNotes[i].timingInMs - (collisionHeight - 40) / noteFallSpeed);
@@ -292,7 +291,7 @@ function makeNote(note) {
 
     // if note passed max height and there was no hit, judge as miss
     if (note.position >= maxHeight) {
-      miss("MISS");
+      miss("MISS", note);
       note.container.removeChild(note.element);
       note.position = null;
       return;
@@ -302,11 +301,7 @@ function makeNote(note) {
       start = timestamp;
     }
     const elapsed = timestamp - start;
-    if (elapsedTime > 65000 && elapsedTime < 74000) {
-      noteFallSpeed = 1.1;
-    } else {
-      noteFallSpeed = 1;
-    }
+
     note.position = Math.min(elapsed * noteFallSpeed, maxHeight);
     note.element.style.transform = `translateY(${note.position}px)`;
 
@@ -364,11 +359,11 @@ window.addEventListener("keydown", (e) => {
         const timingDiff =
           Math.abs(keyDownTiming - allNotes[i].timingInMs) / 31.25;
         if (timingDiff <= 1) {
-          hit("PERFECT", i);
+          hit("PERFECT", allNotes[i]);
         } else if (timingDiff <= 2) {
-          hit("GOOD", i);
+          hit("GOOD", allNotes[i]);
         } else if (timingDiff <= 3) {
-          hit("BAD", i);
+          hit("BAD", allNotes[i]);
         }
       }
     }
@@ -377,25 +372,29 @@ window.addEventListener("keydown", (e) => {
   judge(keyDownTiming);
 });
 
-function hit(judgment, i) {
+function hit(judgment, note) {
   accuracyScreen.innerHTML = judgment;
   comboCount++;
   comboScreen.innerHTML = comboCount;
-  allNotes[i].hasBeenHit = true;
+  note.hasBeenHit = true;
+  note.judgment = judgment;
 
   //scoring
-  if ((judgment = "PERFECT")) {
-    score += 15;
-  } else if ((judgment = "GOOD")) {
-    score += 10;
-  } else if ((judgment = "BAD")) {
-    score += 5;
+  if (judgment === "PERFECT") {
+    note.score = 15;
+  } else if (judgment === "GOOD") {
+    note.score = 10;
+  } else if (judgment === "BAD") {
+    note.score = 5;
   }
+  score += note.score;
   scoreScreen.innerHTML = score;
 }
 
-function miss(judgment) {
+function miss(judgment, note) {
   accuracyScreen.innerHTML = judgment;
+  note.judgment = judgment;
+  note.score = 0;
   comboCount = 0;
   comboScreen.innerHTML = comboCount;
 }
@@ -407,26 +406,112 @@ window.addEventListener("keyup", (e) => {
   }
 });
 
-// track scores
+// track score
 let score = 0;
 const scoreBody = document.querySelector("#score");
 const scoreScreen = scoreBody.querySelector(".screen");
 scoreScreen.innerHTML = 0;
 
 // add bonus score for combos
+let maxComboReached = null;
 const comboBonus = comboCount / 50;
-if (comboBonus >= 1) {
+if (comboBonus === 1) {
   score += 30;
   scoreScreen.innerHTML = score;
-} else if (comboBonus >= 2) {
+} else if (comboBonus === 2) {
   score += 50;
   scoreScreen.innerHTML = score;
-} else if (comboBonus >= 3) {
+} else if (comboBonus === 3) {
   score += 70;
   scoreScreen.innerHTML = score;
-} else if (comboBonus >= 4) {
+} else if (comboBonus === 4) {
   score += 90;
   scoreScreen.innerHTML = score;
+} else if (comboBonus === 5) {
+  score += 110;
+  scoreScreen.innerHTML = score;
+} else if (comboBonus === 6) {
+  score += 130;
+  scoreScreen.innerHTML = score;
+} else if (comboCount === allNotes.length) {
+  score += 500;
+  scoreScreen.innerHTML = score;
+  maxComboReached = true;
+}
+
+// generate result screen
+const resultScore = document.querySelector("#resultScore");
+
+function generateResult() {
+  resultScore.innerHTML = `${score}`;
+  makeHitPercentages();
+  calculateGrade();
+  makePieChart();
+}
+
+// calculate hit percantages
+const perfectNotesScreen = document.querySelector("#perfectNotes");
+const goodNotesScreen = document.querySelector("#goodNotes");
+const badNotesScreen = document.querySelector("#badNotes");
+const missedNotesScreen = document.querySelector("#missedNotes");
+
+function makeHitPercentages() {
+  allNotes.forEach((note) => {
+    if (note.judgment === "PERFECT") {
+      perfectNotes += 1;
+    } else if (note.judgment === "GOOD") {
+      goodNotes += 1;
+    } else if (note.judgment === "BAD") {
+      badNotes += 1;
+    } else if (note.judgment === "MISS") {
+      missedNotes += 1;
+    }
+  });
+  perfectPercentages = ((perfectNotes / allNotes.length) * 100).toFixed(2);
+  goodPercentages = ((goodNotes / allNotes.length) * 100).toFixed(2);
+  badPercentages = ((badNotes / allNotes.length) * 100).toFixed(2);
+  missedPercentages = ((missedNotes / allNotes.length) * 100).toFixed(2);
+  perfectNotesScreen.innerHTML = `${perfectNotes} notes, ${perfectPercentages}%`;
+  goodNotesScreen.innerHTML = `${goodNotes} notes, ${goodPercentages}%`;
+  badNotesScreen.innerHTML = `${badNotes} notes, ${badPercentages}%`;
+  missedNotesScreen.innerHTML = `${missedNotes} notes, ${missedPercentages}%`;
+}
+
+const pieChart = document.querySelector(".pieChart");
+
+function makePieChart() {
+  pieChart.style.background = `
+  conic-gradient(
+    #f8449f ${perfectPercentages}%,
+    #155ba7 ${parseFloat(perfectPercentages) + parseFloat(goodPercentages)}%,
+    #41c5f5 ${
+      parseFloat(perfectPercentages) +
+      parseFloat(goodPercentages) +
+      parseFloat(badPercentages)
+    }%,
+    #ffd600 100%)`;
+}
+
+// calculate grade
+let grade = null;
+let scorePercentages = 0;
+const gradeScreen = document.querySelector("#grade");
+
+function calculateGrade() {
+  scorePercentages = Math.round((score / 5630) * 100);
+  if (scorePercentages >= 80) {
+    grade = "S";
+  } else if (scorePercentages >= 60) {
+    grade = "A";
+  } else if (scorePercentages >= 40) {
+    grade = "B";
+  } else if (scorePercentages >= 20) {
+    grade = "C";
+  } else {
+    grade = "F";
+  }
+
+  gradeScreen.innerHTML = `${grade}`;
 }
 
 // instruction and settings pop up
@@ -436,8 +521,10 @@ const instructionCloseButton = document.querySelector(
   "#instructionCloseButton"
 );
 const settingsCloseButton = document.querySelector("#settingsCloseButton");
+const resultCloseButton = document.querySelector("#resultCloseButton");
 const instructionModal = document.querySelector("#instructionModal");
 const settingsModal = document.querySelector("#settingsModal");
+const resultModal = document.querySelector("#resultModal");
 const overlay = document.querySelector("#overlay");
 
 instructionButton.addEventListener("click", () => {
@@ -455,6 +542,10 @@ instructionCloseButton.addEventListener("click", () => {
 
 settingsCloseButton.addEventListener("click", () => {
   closeModal(settingsModal);
+});
+
+resultCloseButton.addEventListener("click", () => {
+  closeModal(resultModal);
 });
 
 overlay.addEventListener("click", () => {
@@ -495,6 +586,11 @@ function handleStartTimer() {
       }
       elapsedTime = Date.now() - startTime;
       timerScreen.innerHTML = `${(elapsedTime / 1000).toFixed() + "s"}`;
+      if (elapsedTime >= 92000) {
+        clearInterval(timerId);
+        generateResult();
+        openModal(resultModal);
+      }
     }, 10);
   }
 }
@@ -513,25 +609,32 @@ function resetGame() {
   barTimeouts.forEach((note) => clearTimeout(note));
   handleResetTimer();
   accuracyScreen.innerHTML = null;
+  timerScreen.innerHTML = `${elapsedTime + "s"}`;
+  allNotes.forEach((note) => {
+    note.hasBeenHit = false;
+    note.judgment = false;
+    note.score = null;
+  });
+  comboScreen.innerHTML = null;
+  maxComboReached = null;
+  // reset scores
+  perfectPercentages = 0;
+  goodPercentages = 0;
+  badPercentages = 0;
+  missedPercentages = 0;
+  perfectNotes = 0;
+  goodNotes = 0;
+  badNotes = 0;
+  missedNotes = 0;
+  grade = null;
   comboCount = 0;
   score = 0;
-  elapsedTime = 0;
-  timerScreen.innerHTML = `${elapsedTime + "s"}`;
-  scoreScreen.innerHTML = score;
-  allNotes.forEach((note) => (note.hasBeenHit = false));
-  comboScreen.innerHTML = null;
   scoreScreen.innerHTML = score;
 }
 
 // start and stop game
 function startGame() {
-  if (timerId) {
-    clearInterval(timerId);
-    timerId = null;
-    startTime = null;
-    handleResetTimer();
-    resetGame();
-  }
+  resetGame();
   backgroundAudio.play();
   startNoteFalls();
   startbarIndicatorFalls();
@@ -544,3 +647,5 @@ function stopGame() {
 
 startButton.addEventListener("click", startGame);
 stopButton.addEventListener("click", stopGame);
+
+// // noteFallSpeed -> up and down arrow to adjust

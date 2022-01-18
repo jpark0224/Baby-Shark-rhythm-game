@@ -36,11 +36,31 @@
         <div class="modal" id="settingsModal">
             <div class="modal-header">
                 <div class="title">SETTINGS</div>
-                <button class="closeButton"id="settingsCloseButton">&times;</button>
+                <button class="closeButton" id="settingsCloseButton">&times;</button>
             </div>
             <div class="modal-body">
                 <p>SETTINGS</p>
+                </div>
             </div>
+        </div>
+        <div id="overlay"></div>
+        <div class="modal" id="resultModal">
+            <div class="modal-header">
+                <div class="title">RESULT</div>
+                <button class="closeButton" id="resultCloseButton">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Grade: <span id="grade"></span></p>
+                <p>Total Score: <span id="resultScore"></span></p>
+                <figure class="pieChart"></figure>
+                <figcaption>
+                    <p>PERFECT <span id="perfectNotes"></span><span style="color:#f8449f"></span></p>
+                    <p>GOOD <span id="goodNotes"></span><span style="color:#155ba7"></span></p>
+                    <p>BAD <span id="badNotes"><span style="color:#41c5f5"></span></p>
+                    <p>MISS <span id="missedNotes"><span style="color:#ffd600"></span></p>
+                </figcaption>
+            </div>
+        </div>
         </div>
         <div id="overlay"></div>
    </div>
@@ -72,11 +92,34 @@
     </div>
     <section class="gameInfo">
     <div id="timer">
-        <p>Time: <span class="screen"></div></p>
+        <p>Time: <span class="screen"></span></p>
     </div>
     <div id="score">
         <p>Score: <span class="screen"></span></p>
     </div>
+
+    <!-- result
+    <div class="modal" id="resultModal">
+        <div class="modal-header">
+            <div class="title">RESULT</div>
+            <button class="closeButton" id="resultCloseButton">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>Grade: <span id="grade"></span></p>
+            <p>Total Score: <span id="resultScore"></span></p>
+
+            <figure class="pieChart">
+                <figcaption>
+                    PERFECT <span id="perfectNotes"></span><span style="color:#edc949"></span><br>
+                    GOOD <span id="goodNotes"></span><span style="color:#f28e2c"></span><br>
+                    BAD <span id="badNotes"><span style="color:#e15759"></span><br>
+                    MISS <span id="missedNotes"><span style="color:#76b7b2"></span>
+                </figcaption>
+            </figure>
+        </div>
+    </div>
+    <div id="overlay"></div> -->
+
     </section>
     </section>
 

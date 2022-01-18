@@ -196,7 +196,8 @@ body {
   border-radius: 10px;
   z-index: 10;
   background-color: white;
-  width: 500px;
+  /* width: 500px; */
+  width: fit-content;
   max-width: 80%;
 }
 
@@ -257,4 +258,34 @@ body {
   background: white;
   width: 500px;
   z-index: -1;
+}
+
+.pieChart {
+  background: conic-gradient(#f8449f 0%, #155ba7 0%, #41c5f5 0%, #ffd600 100%);
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  width: 200px;
+  height: 200px;
+  margin: 0;
+  outline: 1px solid #ccc;
+  border-radius: 50%;
+}
+
+.pie-chart figcaption {
+  bottom: 1em;
+  right: 1em;
+  font-size: smaller;
+  text-align: right;
+}
+.pie-chart span:after {
+  display: inline-block;
+  content: "";
+  width: 0.8em;
+  height: 0.8em;
+  margin-left: 0.4em;
+  height: 0.8em;
+  border-radius: 0.2em;
+  background: currentColor;
 }
