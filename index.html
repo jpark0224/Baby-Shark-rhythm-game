@@ -16,22 +16,23 @@
         <button class="controlsButton" id="start">PLAY</button>
         <button class="controlsButton" id="stop">STOP</button>
         <button class="modalButton" id="instructionButton"><img src="./images/information.png" alt="how to play button"></button>
-            <div class="modal" id="instructionModal">
-                <div class="modal-header">
-                    <div class="title">Play Baby Shark with a keyboard!</div>
-                    <button class="closeButton"id="instructionCloseButton">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div>
-                        <p>When you press PLAY, baby sharkes will fall down.</p>
-                        <p>Try to catch them when they reach the pink circles by pressing the corresponding buttons while listening to the background music carefully.</p>
-                        <p>The more accurate you play the notes and the longer combos you achieve, the more you will score!</p>
-                    </div>                       
-                <div>This game is optimal to play in 1920 x 1080.</div>                
-                    <div>E: juliepark242@gmail.com</div>
-                </div>
+        <div class="modal" id="instructionModal">
+            <div class="modal-header">
+                <div class="title">Play Baby Shark with a keyboard!</div>
+                <button class="closeButton"id="instructionCloseButton">&times;</button>
             </div>
-                <div id="overlay"></div>
+            <div class="modal-body">
+                <div>
+                    <p>Press PLAY to make baby sharks fall down and start a song.</p>
+                    <p>Try to catch them when they reach the pink circles.</p>
+                    <p>You can do this by pressing the corresponding buttons while listening to the song carefully.</p>
+                    <p>The more accurate you play the notes and the longer combos you achieve, the more you will score!</p>
+                </div>                       
+                <div>A browser height over 900px is recommended for this game.</div>                
+                <div>E: juliepark242@gmail.com</div>
+            </div>
+            </div>
+        <div id="overlay"></div>
         <button class="modalButton" id="settingsButton"><img src="./images/settings.png" alt="settings play"></button>
         <div class="modal" id="settingsModal">
             <div class="modal-header">
@@ -39,8 +40,11 @@
                 <button class="closeButton" id="settingsCloseButton">&times;</button>
             </div>
             <div class="modal-body">
-                <p>SETTINGS</p>
-                </div>
+                <p>Note: this screen is only accessible when the song is not playing. The speed can only be adjusted when this screen is open.</p>
+                <p>Press &#8593; or &#8595; to adjust note fall speed. Default is 1.</p>
+                    <div id="settingsSpeed">
+                        <p>Speed: <span class="settingsScreen"></span> (0.1 - 10.0)</p>
+                    </div>
             </div>
         </div>
         <div id="overlay"></div>
@@ -50,20 +54,18 @@
                 <button class="closeButton" id="resultCloseButton">&times;</button>
             </div>
             <div class="modal-body">
-                <p>Grade: <span id="grade"></span></p>
                 <p>Total Score: <span id="resultScore"></span></p>
-                <figure class="pieChart"></figure>
+                <p>Maximum Combo: <span id="maxCombo"></span></p>
+                <figure class="pieChart"><span id="grade"></span></figure>
                 <figcaption>
-                    <p>PERFECT <span id="perfectNotes"></span><span style="color:#f8449f"></span></p>
-                    <p>GOOD <span id="goodNotes"></span><span style="color:#155ba7"></span></p>
-                    <p>BAD <span id="badNotes"><span style="color:#41c5f5"></span></p>
-                    <p>MISS <span id="missedNotes"><span style="color:#ffd600"></span></p>
+                    <p><span class="colorBlock" style="color:#155ba7"></span> Perfect: <span id="perfectNotes"></span></span></p>
+                    <p><span class="colorBlock" style="color:#57cdf5"></span> Good: <span id="goodNotes"></span></span></p>
+                    <p><span class="colorBlock" style="color:#FF8C33"></span> Bad: <span id="badNotes"></span></p>
+                    <p><span class="colorBlock" style="color:#ffd600"></span> Miss: <span id="missedNotes"></span></p>
                 </figcaption>
             </div>
         </div>
-        </div>
         <div id="overlay"></div>
-   </div>
    </section>
    <section class="main">
     <div class="container">
@@ -97,29 +99,9 @@
     <div id="score">
         <p>Score: <span class="screen"></span></p>
     </div>
-
-    <!-- result
-    <div class="modal" id="resultModal">
-        <div class="modal-header">
-            <div class="title">RESULT</div>
-            <button class="closeButton" id="resultCloseButton">&times;</button>
-        </div>
-        <div class="modal-body">
-            <p>Grade: <span id="grade"></span></p>
-            <p>Total Score: <span id="resultScore"></span></p>
-
-            <figure class="pieChart">
-                <figcaption>
-                    PERFECT <span id="perfectNotes"></span><span style="color:#edc949"></span><br>
-                    GOOD <span id="goodNotes"></span><span style="color:#f28e2c"></span><br>
-                    BAD <span id="badNotes"><span style="color:#e15759"></span><br>
-                    MISS <span id="missedNotes"><span style="color:#76b7b2"></span>
-                </figcaption>
-            </figure>
-        </div>
+    <div id="speed">
+        <p>Speed: <span class="screen"></span></p>
     </div>
-    <div id="overlay"></div> -->
-
     </section>
     </section>
 

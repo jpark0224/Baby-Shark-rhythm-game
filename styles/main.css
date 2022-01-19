@@ -138,7 +138,8 @@ body {
 }
 
 #score,
-#timer {
+#timer,
+#speed {
   color: #f8449f;
   font-size: 30px;
   margin: 20px;
@@ -169,7 +170,6 @@ body {
   font-size: 50px;
   cursor: default;
   top: 400px;
-  z-index: 1;
 }
 
 .comboScreen {
@@ -183,10 +183,13 @@ body {
   font-size: 130px;
   cursor: default;
   top: 150px;
-  z-index: 1;
 }
 
 .modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -196,8 +199,7 @@ body {
   border-radius: 10px;
   z-index: 10;
   background-color: white;
-  /* width: 500px; */
-  width: fit-content;
+  width: 500px;
   max-width: 80%;
 }
 
@@ -206,15 +208,15 @@ body {
 }
 
 .modal-header {
-  padding: 10px 15px;
+  padding: 20px 20px 0 20px;
   color: #f8449f;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  width: 450px;
 }
 
 .modal-header .title {
-  font-size: 1.25rem;
+  font-size: 30px;
   font-weight: bold;
 }
 
@@ -223,12 +225,13 @@ body {
   border: none;
   outline: none;
   background: none;
-  font-size: 1.25rem;
+  font-size: 30px;
   font-weight: bold;
 }
 
 .modal-body {
-  padding: 10px 15px;
+  padding: 20px 20px;
+  font-size: 20px;
 }
 
 .modal-body div {
@@ -245,6 +248,7 @@ body {
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
   pointer-events: none;
+  z-index: 9;
 }
 
 #overlay.active {
@@ -261,7 +265,8 @@ body {
 }
 
 .pieChart {
-  background: conic-gradient(#f8449f 0%, #155ba7 0%, #41c5f5 0%, #ffd600 100%);
+  display: flex;
+  background: conic-gradient(#f8449f 0%, #155ba7 0%, #ff8c33 0%, #ffd600 100%);
   margin-left: auto;
   margin-right: auto;
   left: 0;
@@ -271,15 +276,16 @@ body {
   margin: 0;
   outline: 1px solid #ccc;
   border-radius: 50%;
+  justify-content: center;
+  align-items: center;
 }
 
 .pie-chart figcaption {
   bottom: 1em;
   right: 1em;
-  font-size: smaller;
   text-align: right;
 }
-.pie-chart span:after {
+.colorBlock {
   display: inline-block;
   content: "";
   width: 0.8em;
@@ -288,4 +294,15 @@ body {
   height: 0.8em;
   border-radius: 0.2em;
   background: currentColor;
+}
+
+#grade {
+  display: flex;
+  color: white;
+  font-size: 130px;
+}
+
+#settingsSpeed {
+  font-size: 25px;
+  color: #155ba7;
 }

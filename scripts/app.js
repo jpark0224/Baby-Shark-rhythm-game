@@ -2,6 +2,8 @@
 const startButton = document.querySelector("#start");
 const stopButton = document.querySelector("#stop");
 const backgroundAudio = new Audio("./audio/baby_shark.wav");
+const comboAudio = new Audio("./audio/combo.wav");
+const maxComboAudio = new Audio("./audio/maxCombo.wav");
 const container = document.querySelector(".container");
 const containerD = document.querySelector(".containerD");
 const containerF = document.querySelector(".containerF");
@@ -22,6 +24,11 @@ let badNotes = 0;
 let badPercentages = 0;
 let missedNotes = 0;
 let missedPercentages = 0;
+const highestCombos = [];
+const speedScreen = document.querySelector("#speed .screen");
+speedScreen.innerHTML = noteFallSpeed;
+const settingsSpeed = document.querySelector(".settingsScreen");
+settingsSpeed.innerHTML = noteFallSpeed;
 
 let totalHitScore = 0;
 
@@ -314,14 +321,12 @@ function makeNote(note) {
 
 // play keys and add effects
 window.addEventListener("keydown", (e) => {
-  const keyDownTiming = elapsedTime;
-
   // set up keys
   const setupKeys = () => {
     if (e.key === "d" || e.key === "f" || e.key === "j" || e.key === "k") {
       // set up key audio
       const audio = document.querySelector(`audio[key="${e.key}"]`);
-      if (keyDownTiming > 64700) {
+      if (elapsedTime > 64700 && elapsedTime < 92000) {
         if (e.key === "d") {
           audio.src = "./audio/DSharp5.wav";
         } else if (e.key === "f") {
@@ -336,7 +341,7 @@ window.addEventListener("keydown", (e) => {
       audio.play();
 
       // mute keys in intro
-      if (keyDownTiming < 16250) {
+      if (elapsedTime < 16250) {
         audio.muted = true;
       } else {
         audio.muted = false;
@@ -349,15 +354,33 @@ window.addEventListener("keydown", (e) => {
       // developer feature: show elapsed time in ms
       console.log(elapsedTime);
     }
+
+    if (settingsModal.classList.contains("active")) {
+      if (e.key === "ArrowUp") {
+        e.preventDefault();
+        if (noteFallSpeed < 10.0) {
+          noteFallSpeed = (parseFloat(noteFallSpeed) + 0.1).toFixed(1);
+          speedScreen.innerHTML = noteFallSpeed;
+          settingsSpeed.innerHTML = noteFallSpeed;
+        }
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        if (noteFallSpeed > 0.1) {
+          noteFallSpeed = (parseFloat(noteFallSpeed) - 0.1).toFixed(1);
+          speedScreen.innerHTML = noteFallSpeed;
+          settingsSpeed.innerHTML = noteFallSpeed;
+        }
+      }
+    }
   };
   setupKeys();
 
   // judge accuracy
-  const judge = (keyDownTiming) => {
+  const judge = (elapsedTime) => {
     if (e.key === "d" || e.key === "f" || e.key === "j" || e.key === "k") {
       for (let i = 0; i < allNotes.length; i++) {
         const timingDiff =
-          Math.abs(keyDownTiming - allNotes[i].timingInMs) / 31.25;
+          Math.abs(elapsedTime - allNotes[i].timingInMs) / 31.25;
         if (timingDiff <= 1) {
           hit("PERFECT", allNotes[i]);
         } else if (timingDiff <= 2) {
@@ -369,7 +392,7 @@ window.addEventListener("keydown", (e) => {
     }
   };
 
-  judge(keyDownTiming);
+  judge(elapsedTime);
 });
 
 function hit(judgment, note) {
@@ -389,12 +412,15 @@ function hit(judgment, note) {
   }
   score += note.score;
   scoreScreen.innerHTML = score;
+
+  handleCombo();
 }
 
 function miss(judgment, note) {
   accuracyScreen.innerHTML = judgment;
   note.judgment = judgment;
   note.score = 0;
+  highestCombos.push(comboCount);
   comboCount = 0;
   comboScreen.innerHTML = comboCount;
 }
@@ -414,39 +440,37 @@ scoreScreen.innerHTML = 0;
 
 // add bonus score for combos
 let maxComboReached = null;
-const comboBonus = comboCount / 50;
-if (comboBonus === 1) {
-  score += 30;
-  scoreScreen.innerHTML = score;
-} else if (comboBonus === 2) {
-  score += 50;
-  scoreScreen.innerHTML = score;
-} else if (comboBonus === 3) {
-  score += 70;
-  scoreScreen.innerHTML = score;
-} else if (comboBonus === 4) {
-  score += 90;
-  scoreScreen.innerHTML = score;
-} else if (comboBonus === 5) {
-  score += 110;
-  scoreScreen.innerHTML = score;
-} else if (comboBonus === 6) {
-  score += 130;
-  scoreScreen.innerHTML = score;
-} else if (comboCount === allNotes.length) {
-  score += 500;
-  scoreScreen.innerHTML = score;
-  maxComboReached = true;
+
+function handleCombo() {
+  let comboBonus = comboCount / 50;
+  for (i = 0; i < 3; i++) {
+    if (comboBonus === 1 + i * 2) {
+      score += 30 + i * 40;
+      scoreScreen.innerHTML = score;
+    } else if (comboBonus === 2 + i * 2) {
+      score += 50 + i * 40;
+      scoreScreen.innerHTML = score;
+      comboAudio.play();
+    }
+  }
+  if (comboCount === allNotes.length) {
+    score += 500;
+    maxComboAudio.play();
+    scoreScreen.innerHTML = score;
+    maxComboReached = true;
+    highestCombos.push(allNotes.length);
+  }
 }
 
 // generate result screen
 const resultScore = document.querySelector("#resultScore");
 
 function generateResult() {
-  resultScore.innerHTML = `${score}`;
+  resultScore.innerHTML = score;
   makeHitPercentages();
   calculateGrade();
   makePieChart();
+  findMaxCombo();
 }
 
 // calculate hit percantages
@@ -471,10 +495,10 @@ function makeHitPercentages() {
   goodPercentages = ((goodNotes / allNotes.length) * 100).toFixed(2);
   badPercentages = ((badNotes / allNotes.length) * 100).toFixed(2);
   missedPercentages = ((missedNotes / allNotes.length) * 100).toFixed(2);
-  perfectNotesScreen.innerHTML = `${perfectNotes} notes, ${perfectPercentages}%`;
-  goodNotesScreen.innerHTML = `${goodNotes} notes, ${goodPercentages}%`;
-  badNotesScreen.innerHTML = `${badNotes} notes, ${badPercentages}%`;
-  missedNotesScreen.innerHTML = `${missedNotes} notes, ${missedPercentages}%`;
+  perfectNotesScreen.innerHTML = `${perfectPercentages}%`;
+  goodNotesScreen.innerHTML = `${goodPercentages}%`;
+  badNotesScreen.innerHTML = `${badPercentages}%`;
+  missedNotesScreen.innerHTML = `${missedPercentages}%`;
 }
 
 const pieChart = document.querySelector(".pieChart");
@@ -482,13 +506,17 @@ const pieChart = document.querySelector(".pieChart");
 function makePieChart() {
   pieChart.style.background = `
   conic-gradient(
-    #f8449f ${perfectPercentages}%,
-    #155ba7 ${parseFloat(perfectPercentages) + parseFloat(goodPercentages)}%,
-    #41c5f5 ${
+    #155ba7 0, 
+    #155ba7 ${perfectPercentages}%,
+    #57cdf5 0, 
+    #57cdf5 ${parseFloat(perfectPercentages) + parseFloat(goodPercentages)}%,
+    #FF8C33 0, 
+    #FF8C33 ${
       parseFloat(perfectPercentages) +
       parseFloat(goodPercentages) +
       parseFloat(badPercentages)
     }%,
+    #ffd600 0, 
     #ffd600 100%)`;
 }
 
@@ -511,7 +539,19 @@ function calculateGrade() {
     grade = "F";
   }
 
-  gradeScreen.innerHTML = `${grade}`;
+  gradeScreen.innerHTML = grade;
+}
+
+// find the highest combo
+let maxComboCount = 0;
+const maxCombo = document.querySelector("#maxCombo");
+
+function findMaxCombo() {
+  maxComboCount = 0;
+  maxComboCount = highestCombos.reduce((a, b) => {
+    return Math.max(a, b);
+  }, 0);
+  maxCombo.innerHTML = maxComboCount;
 }
 
 // instruction and settings pop up
@@ -533,7 +573,9 @@ instructionButton.addEventListener("click", () => {
 
 settingsButton.addEventListener("click", () => {
   const settingsModal = document.querySelector("#settingsModal");
-  openModal(settingsModal);
+  if (elapsedTime === 92000 || elapsedTime === 0) {
+    openModal(settingsModal);
+  }
 });
 
 instructionCloseButton.addEventListener("click", () => {
@@ -609,7 +651,7 @@ function resetGame() {
   barTimeouts.forEach((note) => clearTimeout(note));
   handleResetTimer();
   accuracyScreen.innerHTML = null;
-  timerScreen.innerHTML = `${elapsedTime + "s"}`;
+  timerScreen.innerHTML = `${elapsedTime}s`;
   allNotes.forEach((note) => {
     note.hasBeenHit = false;
     note.judgment = false;
@@ -630,6 +672,8 @@ function resetGame() {
   comboCount = 0;
   score = 0;
   scoreScreen.innerHTML = score;
+  maxComboCount = 0;
+  highestCombos.length = 0;
 }
 
 // start and stop game
@@ -647,5 +691,3 @@ function stopGame() {
 
 startButton.addEventListener("click", startGame);
 stopButton.addEventListener("click", stopGame);
-
-// // noteFallSpeed -> up and down arrow to adjust
