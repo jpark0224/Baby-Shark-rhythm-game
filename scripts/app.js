@@ -338,7 +338,15 @@ window.addEventListener("keydown", (e) => {
         }
       }
       audio.currentTime = 0;
-      audio.play();
+      let playPromise = audio.play();
+
+      if (playPromise !== undefined) {
+        playPromise
+          .then((_) => {})
+          .catch((error) => {
+            console.log(error);
+          });
+      }
 
       // mute keys in intro
       if (elapsedTime < 16250) {
@@ -573,7 +581,7 @@ instructionButton.addEventListener("click", () => {
 
 settingsButton.addEventListener("click", () => {
   const settingsModal = document.querySelector("#settingsModal");
-  if (elapsedTime === 92000 || elapsedTime === 0) {
+  if (elapsedTime >= 92000 || elapsedTime === 0) {
     openModal(settingsModal);
   }
 });
