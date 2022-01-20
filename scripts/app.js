@@ -40,7 +40,7 @@ let elapsedTime = 0;
 
 // note timings
 const noteDTimings = [
-  9250, 9750, 11000, 12750, 13500, 13750, 15000, 15750, 89200, 89575, 90075,
+  9250, 9750, 11000, 12750, 13500, 13750, 15000, 15750, 89325, 89700, 90075,
 ];
 const noteFTimings = [
   8000, 9000, 9500, 10000, 10750, 13000, 13250, 14000, 14750, 15750, 89450,
@@ -307,7 +307,21 @@ function makeNote(note) {
     if (start === undefined) {
       start = timestamp;
     }
-    const elapsed = timestamp - start;
+    // const elapsed = timestamp - start;
+    const elapsed =
+      Date.now() -
+      startTime -
+      note.timingInMs +
+      (collisionHeight - 40) / noteFallSpeed;
+
+    // // modified
+    // console.log(
+    //   elapsed,
+    //   Date.now() -
+    //     startTime -
+    //     note.timingInMs +
+    //     (collisionHeight - 40) / noteFallSpeed
+    // );
 
     note.position = Math.min(elapsed * noteFallSpeed, maxHeight);
     note.element.style.transform = `translateY(${note.position}px)`;
@@ -335,7 +349,7 @@ window.addEventListener("keydown", (e) => {
         audio.play();
       }
 
-      // mute keys in intro
+      // mute keys in intro & mute keys when mute icon is pressed
       if (elapsedTime < 16250 || backgroundAudio.muted === true) {
         audio.muted = true;
       } else {
@@ -350,6 +364,7 @@ window.addEventListener("keydown", (e) => {
       console.log(elapsedTime);
     }
 
+    // allow arrow up and down to change note fall speed in settings pop-up
     if (settingsModal.classList.contains("active")) {
       if (e.key === "ArrowUp") {
         e.preventDefault();
@@ -390,6 +405,7 @@ window.addEventListener("keydown", (e) => {
   judge(elapsedTime);
 });
 
+// handle note hits
 function hit(judgment, note) {
   accuracyScreen.innerHTML = judgment;
   comboCount++;
@@ -411,6 +427,7 @@ function hit(judgment, note) {
   handleCombo();
 }
 
+// handle misses
 function miss(judgment, note) {
   accuracyScreen.innerHTML = judgment;
   note.judgment = judgment;
@@ -420,6 +437,7 @@ function miss(judgment, note) {
   comboScreen.innerHTML = comboCount;
 }
 
+// remove playing effect on keys when keys are up
 window.addEventListener("keyup", (e) => {
   if (e.key === "d" || e.key === "f" || e.key === "j" || e.key === "k") {
     const key = document.querySelector(`.key[key="${e.key}"]`);
@@ -468,7 +486,7 @@ function generateResult() {
   findMaxCombo();
 }
 
-// calculate hit percantages
+// calculate the percantages of each hit judgment
 const perfectNotesScreen = document.querySelector("#perfectNotes");
 const goodNotesScreen = document.querySelector("#goodNotes");
 const badNotesScreen = document.querySelector("#badNotes");
@@ -496,6 +514,7 @@ function makeHitPercentages() {
   missedNotesScreen.innerHTML = `${missedPercentages}%`;
 }
 
+// make a pie chart from the hit judgments
 const pieChart = document.querySelector(".pieChart");
 
 function makePieChart() {
