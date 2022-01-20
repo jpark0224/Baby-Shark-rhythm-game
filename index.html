@@ -16,6 +16,8 @@
         <button class="controlsButton" id="start">PLAY</button>
         <button class="controlsButton" id="stop">STOP</button>
         <button class="modalButton" id="instructionButton"><img src="./images/information.png" alt="how to play button"></button>
+        <button id="muteButton"><img src="./images/mute.png"
+                alt="mute button"></button>
         <div class="modal" id="instructionModal">
             <div class="modal-header">
                 <div class="title">Play Baby Shark with a keyboard!</div>
@@ -105,6 +107,10 @@
     </section>
     </section>
 
+    <audio id="backgroundAudio" src="./audio/baby_shark.wav"></audio>
+    <audio id="comboAudio" src="./audio/combo.wav"></audio>
+    <audio id="maxComboAudio" src="./audio/maxCombo.wav"></audio>
+
     <audio key="d" src="./audio/D5.wav"></audio>
     <audio key="f" src="./audio/E5.wav"></audio>
     <audio key="j" src="./audio/FSharp5.wav"></audio>
@@ -113,7 +119,7 @@
     <audio key="dMod" src="./audio/DSharp5.wav"></audio>
     <audio key="fMod" src="./audio/F5.wav"></audio>
     <audio key="jMod" src="./audio/G5.wav"></audio>
-    <audio key="kMod" src="./audio/Gsharp5.wav"></audio>
+    <audio key="kMod" src="./audio/GSharp5.wav"></audio>
 
 <!-- js -->
     <script src="./scripts/app.js"></script>

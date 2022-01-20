@@ -1,9 +1,9 @@
 // variables
 const startButton = document.querySelector("#start");
 const stopButton = document.querySelector("#stop");
-const backgroundAudio = new Audio("./audio/baby_shark.wav");
-const comboAudio = new Audio("./audio/combo.wav");
-const maxComboAudio = new Audio("./audio/maxCombo.wav");
+const backgroundAudio = document.querySelector("#backgroundAudio");
+const comboAudio = document.querySelector("#comboAudio");
+const maxComboAudio = document.querySelector("#maxComboAudio");
 const container = document.querySelector(".container");
 const containerD = document.querySelector(".containerD");
 const containerF = document.querySelector(".containerF");
@@ -336,7 +336,7 @@ window.addEventListener("keydown", (e) => {
       }
 
       // mute keys in intro
-      if (elapsedTime < 16250) {
+      if (elapsedTime < 16250 || backgroundAudio.muted === true) {
         audio.muted = true;
       } else {
         audio.muted = false;
@@ -607,6 +607,24 @@ function closeModal(modal) {
   modal.classList.remove("active");
   overlay.classList.remove("active");
 }
+
+// mute button
+const muteButton = document.querySelector("#muteButton");
+const muteButtonImage = muteButton.querySelector("img");
+
+function muteAudio() {
+  document.querySelectorAll("audio").forEach((audio) => {
+    if (backgroundAudio.muted === true) {
+      muteButtonImage.src = "./images/play.png";
+      audio.muted = false;
+    } else if (backgroundAudio.muted === false) {
+      muteButtonImage.src = "./images/mute.png";
+      audio.muted = true;
+    }
+  });
+}
+
+muteButton.addEventListener("click", muteAudio);
 
 // timer
 let startTime = 0;

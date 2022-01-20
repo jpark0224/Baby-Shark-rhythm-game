@@ -54,7 +54,8 @@ body {
 }
 
 #instructionButton,
-#settingsButton {
+#settingsButton,
+#muteButton {
   background-color: transparent;
   background-repeat: no-repeat;
   border: none;
@@ -65,9 +66,10 @@ body {
 }
 
 #instructionButton img,
-#settingsButton img {
+#settingsButton img,
+#muteButton img {
   height: 42px;
-  width: auto;
+  width: 42px;
 }
 
 .closeButton {
@@ -89,7 +91,7 @@ body {
   border: 3px #155ba7 solid;
   display: flex;
   background-color: #6bc9ec3d;
-  margin-left: 11.7vw;
+  margin-left: 12vw;
 }
 
 .gameInfo {
