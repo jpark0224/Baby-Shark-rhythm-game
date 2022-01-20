@@ -326,26 +326,13 @@ window.addEventListener("keydown", (e) => {
     if (e.key === "d" || e.key === "f" || e.key === "j" || e.key === "k") {
       // set up key audio
       const audio = document.querySelector(`audio[key="${e.key}"]`);
+      const modAudio = document.querySelector(`audio[key="${e.key}Mod"]`);
       if (elapsedTime > 64700 && elapsedTime < 92000) {
-        if (e.key === "d") {
-          audio.src = "./audio/DSharp5.wav";
-        } else if (e.key === "f") {
-          audio.src = "./audio/F5.wav";
-        } else if (e.key === "j") {
-          audio.src = "./audio/G5.wav";
-        } else if (e.key === "k") {
-          audio.src = "./audio/GSharp5.wav";
-        }
-      }
-      audio.currentTime = 0;
-      let playPromise = audio.play();
-
-      if (playPromise !== undefined) {
-        playPromise
-          .then((_) => {})
-          .catch((error) => {
-            console.log(error);
-          });
+        modAudio.currentTime = 0;
+        modAudio.play();
+      } else {
+        audio.currentTime = 0;
+        audio.play();
       }
 
       // mute keys in intro
