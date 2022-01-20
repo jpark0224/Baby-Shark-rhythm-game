@@ -130,10 +130,6 @@ makeNoteTimings(75075, 250, 2, 32);
 
 // populate an array of note objects
 const allNotes = [];
-const dNotes = [];
-const fNotes = [];
-const jNotes = [];
-const kNotes = [];
 
 function populateNotes() {
   for (let i = 0; i < noteDTimings.length; i++) {
@@ -148,7 +144,6 @@ function populateNotes() {
       score: null,
     };
     allNotes.push(dNote);
-    dNotes.push(dNote);
   }
   for (let i = 0; i < noteFTimings.length; i++) {
     const fNote = {
@@ -162,7 +157,6 @@ function populateNotes() {
       score: null,
     };
     allNotes.push(fNote);
-    fNotes.push(fNote);
   }
   for (let i = 0; i < noteJTimings.length; i++) {
     const jNote = {
@@ -176,7 +170,6 @@ function populateNotes() {
       score: null,
     };
     allNotes.push(jNote);
-    jNotes.push(jNote);
   }
   for (let i = 0; i < noteKTimings.length; i++) {
     const kNote = {
@@ -190,7 +183,6 @@ function populateNotes() {
       score: null,
     };
     allNotes.push(kNote);
-    kNotes.push(kNote);
   }
 }
 
@@ -254,10 +246,11 @@ function makeBar(bar) {
       return;
     }
 
-    if (start === undefined) {
-      start = timestamp;
-    }
-    const elapsed = timestamp - start;
+    const elapsed =
+      Date.now() -
+      startTime -
+      bar.timingInMs +
+      (collisionHeight + 40) / noteFallSpeed;
 
     bar.position = Math.min(elapsed * noteFallSpeed, 800);
     bar.element.style.transform = `translateY(${bar.position}px)`;
@@ -274,7 +267,7 @@ function startNoteFalls() {
   for (let i = 0; i < allNotes.length; i++) {
     const noteTimeout = setTimeout(() => {
       makeNote(allNotes[i]);
-    }, allNotes[i].timingInMs - (collisionHeight - 40) / noteFallSpeed);
+    }, allNotes[i].timingInMs - collisionHeight / noteFallSpeed);
     allNoteTimeouts.push(noteTimeout);
   }
 }
@@ -304,24 +297,11 @@ function makeNote(note) {
       return;
     }
 
-    if (start === undefined) {
-      start = timestamp;
-    }
-    // const elapsed = timestamp - start;
     const elapsed =
       Date.now() -
       startTime -
       note.timingInMs +
-      (collisionHeight - 40) / noteFallSpeed;
-
-    // // modified
-    // console.log(
-    //   elapsed,
-    //   Date.now() -
-    //     startTime -
-    //     note.timingInMs +
-    //     (collisionHeight - 40) / noteFallSpeed
-    // );
+      collisionHeight / noteFallSpeed;
 
     note.position = Math.min(elapsed * noteFallSpeed, maxHeight);
     note.element.style.transform = `translateY(${note.position}px)`;
@@ -387,10 +367,9 @@ window.addEventListener("keydown", (e) => {
 
   // judge accuracy
   const judge = (elapsedTime) => {
-    if (e.key === "d" || e.key === "f" || e.key === "j" || e.key === "k") {
-      for (let i = 0; i < allNotes.length; i++) {
-        const timingDiff =
-          Math.abs(elapsedTime - allNotes[i].timingInMs) / 31.25;
+    for (let i = 0; i < allNotes.length; i++) {
+      const timingDiff = Math.abs(elapsedTime - allNotes[i].timingInMs) / 31.25;
+      if (allNotes[i].key === e.key) {
         if (timingDiff <= 1) {
           hit("PERFECT", allNotes[i]);
         } else if (timingDiff <= 2) {
