@@ -53,28 +53,28 @@ const noteKTimings = [
   8500, 10500, 11500, 11750, 12500, 14250, 15500, 15750, 89075, 90075,
 ];
 
-// 120bpm, 2/4, 8th note = beat
+// 120bpm, 2/4, 8th note = halfABeat
 
-function makeNoteTimings(k1, beat, numberOfRepeats, repeatIn) {
-  let k2 = k1 + beat;
-  let k3 = k2 + beat;
-  let k4 = k3 + beat;
-  let k5 = k4 + beat / 2;
-  let k6 = k5 + beat;
-  let k7 = k6 + beat / 2;
+function makeNoteTimings(k1, halfABeat, numberOfRepeats, repeatIn) {
+  let k2 = k1 + halfABeat;
+  let k3 = k2 + halfABeat;
+  let k4 = k3 + halfABeat;
+  let k5 = k4 + halfABeat / 2;
+  let k6 = k5 + halfABeat;
+  let k7 = k6 + halfABeat / 2;
 
-  let k8 = k1 + beat * 22;
-  let k9 = k8 + beat;
+  let k8 = k1 + halfABeat * 22;
+  let k9 = k8 + halfABeat;
 
-  let d1 = k1 - beat * 4;
-  let d2 = k1 + beat * 6;
-  let d3 = d2 + beat * 8;
+  let d1 = k1 - halfABeat * 4;
+  let d2 = k1 + halfABeat * 6;
+  let d3 = d2 + halfABeat * 8;
 
-  let f1 = k1 - beat * 2;
-  let f2 = f1 + beat * 9;
-  let f3 = f2 + beat * 8;
+  let f1 = k1 - halfABeat * 2;
+  let f2 = f1 + halfABeat * 9;
+  let f3 = f2 + halfABeat * 8;
 
-  let j = k1 + beat * 24;
+  let j = k1 + halfABeat * 24;
 
   let modulatedD1 = 64770;
   let modulatedF1 = 65250;
@@ -83,43 +83,43 @@ function makeNoteTimings(k1, beat, numberOfRepeats, repeatIn) {
   for (let i = 0; i < numberOfRepeats; i++) {
     // d
     if (k1 < 65000 || 75000 < k1) {
-      noteDTimings.push(d1 + repeatIn * beat * i);
+      noteDTimings.push(d1 + repeatIn * halfABeat * i);
     } else {
       noteDTimings.push(modulatedD1);
     }
-    noteDTimings.push(d2 + repeatIn * beat * i);
-    noteDTimings.push(d3 + repeatIn * beat * i);
+    noteDTimings.push(d2 + repeatIn * halfABeat * i);
+    noteDTimings.push(d3 + repeatIn * halfABeat * i);
     // f
     if (k1 < 65000 || 75000 < k1) {
-      noteFTimings.push(f1 + repeatIn * beat * i);
+      noteFTimings.push(f1 + repeatIn * halfABeat * i);
     } else {
       noteFTimings.push(modulatedF1);
     }
-    noteFTimings.push(f2 + repeatIn * beat * i);
-    noteFTimings.push(f3 + repeatIn * beat * i);
+    noteFTimings.push(f2 + repeatIn * halfABeat * i);
+    noteFTimings.push(f3 + repeatIn * halfABeat * i);
     // j
     if (k1 < 75000 || i === 0) {
-      noteJTimings.push(j + repeatIn * beat * i);
+      noteJTimings.push(j + repeatIn * halfABeat * i);
     }
     // k
     for (let j = 0; j < 3; j++) {
-      noteKTimings.push(k1 + beat * 8 * j + repeatIn * beat * i);
-      noteKTimings.push(k2 + beat * 8 * j + repeatIn * beat * i);
-      noteKTimings.push(k3 + beat * 8 * j + repeatIn * beat * i);
-      noteKTimings.push(k4 + beat * 8 * j + repeatIn * beat * i);
+      noteKTimings.push(k1 + halfABeat * 8 * j + repeatIn * halfABeat * i);
+      noteKTimings.push(k2 + halfABeat * 8 * j + repeatIn * halfABeat * i);
+      noteKTimings.push(k3 + halfABeat * 8 * j + repeatIn * halfABeat * i);
+      noteKTimings.push(k4 + halfABeat * 8 * j + repeatIn * halfABeat * i);
       if (k1 > 75000 && i === 1 && j === 2) {
-        noteJTimings.push(k5 + beat * 8 * j + repeatIn * beat * i);
-        noteJTimings.push(k6 + beat * 8 * j + repeatIn * beat * i);
-        noteJTimings.push(k7 + beat * 8 * j + repeatIn * beat * i);
+        noteJTimings.push(k5 + halfABeat * 8 * j + repeatIn * halfABeat * i);
+        noteJTimings.push(k6 + halfABeat * 8 * j + repeatIn * halfABeat * i);
+        noteJTimings.push(k7 + halfABeat * 8 * j + repeatIn * halfABeat * i);
       } else {
-        noteKTimings.push(k5 + beat * 8 * j + repeatIn * beat * i);
-        noteKTimings.push(k6 + beat * 8 * j + repeatIn * beat * i);
-        noteKTimings.push(k7 + beat * 8 * j + repeatIn * beat * i);
+        noteKTimings.push(k5 + halfABeat * 8 * j + repeatIn * halfABeat * i);
+        noteKTimings.push(k6 + halfABeat * 8 * j + repeatIn * halfABeat * i);
+        noteKTimings.push(k7 + halfABeat * 8 * j + repeatIn * halfABeat * i);
       }
     }
     if (k1 < 75000 || i === 0) {
-      noteKTimings.push(k8 + repeatIn * beat * i);
-      noteKTimings.push(k9 + repeatIn * beat * i);
+      noteKTimings.push(k8 + repeatIn * halfABeat * i);
+      noteKTimings.push(k9 + repeatIn * halfABeat * i);
     }
   }
 }
@@ -281,7 +281,7 @@ function makeNote(note) {
   let start;
   const maxHeight = 720;
 
-  function nextStep(timestamp) {
+  function nextStep() {
     if (note.hasBeenHit) {
       // stop animating now
       note.container.removeChild(note.element);
@@ -411,7 +411,7 @@ function hit(judgment, note) {
   score += note.score;
   scoreScreen.innerHTML = score;
 
-  handleCombo();
+  handleCombo(note);
 }
 
 // handle misses
@@ -441,7 +441,7 @@ scoreScreen.innerHTML = 0;
 // add bonus score for combos
 let maxComboReached = null;
 
-function handleCombo() {
+function handleCombo(note) {
   let comboBonus = comboCount / 50;
   for (i = 0; i < 3; i++) {
     if (comboBonus === 1 + i * 2) {
@@ -453,12 +453,16 @@ function handleCombo() {
       comboAudio.play();
     }
   }
-  if (comboCount === allNotes.length) {
-    score += 500;
-    maxComboAudio.play();
-    scoreScreen.innerHTML = score;
-    maxComboReached = true;
-    highestCombos.push(allNotes.length);
+  if (note === allNotes[allNotes.length - 1]) {
+    if (comboCount === allNotes.length) {
+      score += 500;
+      maxComboAudio.play();
+      scoreScreen.innerHTML = score;
+      maxComboReached = true;
+      highestCombos.push(allNotes.length);
+    } else {
+      highestCombos.push(comboCount);
+    }
   }
 }
 
@@ -621,10 +625,10 @@ const muteButtonImage = muteButton.querySelector("img");
 function muteAudio() {
   document.querySelectorAll("audio").forEach((audio) => {
     if (backgroundAudio.muted === true) {
-      muteButtonImage.src = "./images/play.png";
+      muteButtonImage.src = "./images/mute.png";
       audio.muted = false;
     } else if (backgroundAudio.muted === false) {
-      muteButtonImage.src = "./images/mute.png";
+      muteButtonImage.src = "./images/play.png";
       audio.muted = true;
     }
   });
