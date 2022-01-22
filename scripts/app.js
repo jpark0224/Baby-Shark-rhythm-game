@@ -370,6 +370,9 @@ window.addEventListener("keydown", (e) => {
     for (let i = 0; i < allNotes.length; i++) {
       const timingDiff = Math.abs(elapsedTime - allNotes[i].timingInMs) / 31.25;
       if (allNotes[i].key === e.key) {
+        if (e.repeat) {
+          return;
+        }
         if (timingDiff <= 1) {
           hit("PERFECT", allNotes[i]);
         } else if (timingDiff <= 2) {
@@ -386,6 +389,9 @@ window.addEventListener("keydown", (e) => {
 
 // handle note hits
 function hit(judgment, note) {
+  if (note.hasBeenHit) {
+    return;
+  }
   accuracyScreen.innerHTML = judgment;
   comboCount++;
   comboScreen.innerHTML = comboCount;
@@ -639,6 +645,10 @@ function handleStartTimer() {
       }
       elapsedTime = Date.now() - startTime;
       timerScreen.innerHTML = `${(elapsedTime / 1000).toFixed() + "s"}`;
+      // wait for elapsedTime to update and play background music in sync with elapsedtime
+      if (elapsedTime > 1000 && elapsedTime < 2000) {
+        playBackgroundMusic();
+      }
       if (elapsedTime >= 92000) {
         clearInterval(timerId);
         generateResult();
@@ -653,6 +663,14 @@ function handleResetTimer() {
   timerId = null;
   startTime = null;
   elapsedTime = 0;
+}
+
+function playBackgroundMusic() {
+  if (backgroundAudio.duration > 0 && !backgroundAudio.paused) {
+    return;
+  }
+  backgroundAudio.currentTime = elapsedTime / 1000;
+  backgroundAudio.play();
 }
 
 function resetGame() {
@@ -690,7 +708,6 @@ function resetGame() {
 // start and stop game
 function startGame() {
   resetGame();
-  backgroundAudio.play();
   startNoteFalls();
   startbarIndicatorFalls();
   handleStartTimer();
