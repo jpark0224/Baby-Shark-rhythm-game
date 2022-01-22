@@ -332,8 +332,10 @@ window.addEventListener("keydown", (e) => {
       // mute keys in intro & mute keys when mute icon is pressed
       if (elapsedTime < 16250 || backgroundAudio.muted === true) {
         audio.muted = true;
+        modAudio.muted = true;
       } else {
         audio.muted = false;
+        modAudio.muted = false;
       }
 
       // set up keydown effect
